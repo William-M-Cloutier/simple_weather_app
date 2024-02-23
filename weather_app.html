@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Forecast</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            width: 300px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #weather {
+            margin-top: 20px;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Weather Forecast</h1>
+        </header>
+    </div>
+    <input type="text" id="location" placeholder="Enter a location">
+    <button onclick="getWeather()">Get Weather</button>
+    <div id="weather"></div>
+
+    <script>
+        function getWeather() {
+            const apiKey = '6957cf9243fb64ba3feffc536b525e76';
+            const location = document.getElementById('location').value;
+            const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${apiKey}&units=imperial`;
+
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    const weatherDiv = document.getElementById('weather');
+                    if (data.cod === 200) {
+                        const { name, main, weather } = data;
+                        weatherDiv.innerHTML = `
+                            <h2>Weather in ${name}</h2>
+                            <p>Temperature: ${main.temp} °F</p>
+                            <p>Feels Like: ${main.feels_like} °F</p>
+                            <p>Humidity: ${main.humidity} %</p>
+                            <p>Weather: ${weather[0].main} </p>
+                        `;
+                    } else {
+                        weatherDiv.innerHTML = `<p>${data.message}</p>`;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching weather data:', error);
+                });
+        }
+    </script>
+</body>
+</html>
